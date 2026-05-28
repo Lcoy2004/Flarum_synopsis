@@ -134,7 +134,9 @@ function isMediaOnlyNode(node: Node): boolean {
   const el = node as Element;
   const hasMedia = el.querySelector('img, video, iframe') !== null;
   if (!hasMedia) return false;
-  const text = (el.textContent || '').trim();
+  const clone = el.cloneNode(true) as Element;
+  clone.querySelectorAll('img, video, iframe').forEach((m) => m.remove());
+  const text = (clone.textContent || '').trim();
   return text.length === 0;
 }
 
@@ -142,33 +144,35 @@ function wrapMediaRow(root: HTMLElement, doc: Document): void {
   const allMedia = root.querySelectorAll('img, video, iframe');
   if (allMedia.length <= 1) return;
 
-  const children = Array.from(root.childNodes);
-  const mediaGroups: Node[][] = [];
-  let currentGroup: Node[] = [];
+  Array.from(root.querySelectorAll('*')).forEach((el) => {
+    const children = Array.from(el.childNodes) as Node[];
+    const mediaGroups: Node[][] = [];
+    let currentGroup: Node[] = [];
 
-  for (const child of children) {
-    if (isMediaOnlyNode(child)) {
-      currentGroup.push(child);
-    } else {
-      if (currentGroup.length > 1) {
-        mediaGroups.push(currentGroup);
+    for (const child of children) {
+      if (isMediaOnlyNode(child)) {
+        currentGroup.push(child);
+      } else {
+        if (currentGroup.length > 1) {
+          mediaGroups.push(currentGroup);
+        }
+        currentGroup = [];
       }
-      currentGroup = [];
     }
-  }
-  if (currentGroup.length > 1) {
-    mediaGroups.push(currentGroup);
-  }
+    if (currentGroup.length > 1) {
+      mediaGroups.push(currentGroup);
+    }
 
-  for (const group of mediaGroups) {
-    const row = doc.createElement('div');
-    row.className = 'Synopsis-media-row';
-    const firstNode = group[0];
-    firstNode.parentNode!.insertBefore(row, firstNode);
-    for (const node of group) {
-      row.appendChild(node);
+    for (const group of mediaGroups) {
+      const row = doc.createElement('div');
+      row.className = 'Synopsis-media-row';
+      const firstNode = group[0];
+      firstNode.parentNode!.insertBefore(row, firstNode);
+      for (const node of group) {
+        row.appendChild(node);
+      }
     }
-  }
+  });
 
   allMedia.forEach((el) => {
     let ancestor: Element | null = el.parentElement;
