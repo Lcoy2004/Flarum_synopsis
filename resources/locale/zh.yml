@@ -1,0 +1,27 @@
+lcoy-synopsis:
+  admin:
+    settings:
+      excerpt-length:
+        label: 摘要字符长度
+        help: 从帖子中显示的摘要字符数量
+      rich-excerpts:
+        label: 显示富文本摘要
+        help: 启用后，图片、嵌入内容和其他非文本元素可能会包含在摘要中
+      excerpt-type:
+        label: 显示哪个帖子的摘要？
+        help: 选择使用首帖还是末帖作为摘要内容
+      excerpt-media-max-height:
+        label: 媒体最大高度（像素）
+        help: 摘要中图片和视频的最大高度。设置为 0 可隐藏所有媒体
+      excerpt-video-max-width:
+        label: 视频最大宽度（像素）
+        help: 摘要中视频的最大宽度。设置为 0 可隐藏视频
+      first-label: 首帖
+      last-label: 末帖
+      tags-enabled: 您已启用 <code>flarum/tags</code>。这些设置将成为默认值，除非各个标签有自己的设置
+  forum:
+    user:
+      settings:
+        summaries-heading: 摘要
+        show-summaries: 在讨论列表中显示每个讨论的摘要（桌面/平板）
+        show-summaries-mobile: 在讨论列表中显示每个讨论的摘要（移动端）
