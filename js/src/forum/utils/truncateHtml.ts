@@ -117,6 +117,7 @@ function collapseBreaks(root: HTMLElement): void {
 }
 
 const VOID_ELEMENTS = new Set(['br', 'hr', 'img', 'input', 'area', 'base', 'col', 'embed', 'source', 'track', 'wbr']);
+const MEDIA_TAGS = new Set(['VIDEO', 'IFRAME', 'AUDIO', 'OBJECT', 'EMBED']);
 
 function removeEmptyElements(root: HTMLElement): void {
   const toRemove: Element[] = [];
@@ -126,7 +127,8 @@ function removeEmptyElements(root: HTMLElement): void {
     const el = node as Element;
     if (el === root) continue;
     if (VOID_ELEMENTS.has(el.tagName.toLowerCase())) continue;
-    if (el.querySelector('img, video, iframe')) continue;
+    if (MEDIA_TAGS.has(el.tagName)) continue;
+    if (el.querySelector('img, video, iframe, audio')) continue;
     if ((el.textContent || '').trim().length > 0) continue;
     toRemove.push(el);
   }
