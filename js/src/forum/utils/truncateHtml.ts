@@ -164,7 +164,7 @@ function wrapMediaRow(root: HTMLElement, doc: Document): void {
     }
 
     for (const group of mediaGroups) {
-      const row = doc.createElement('div');
+      const row = doc.createElement('span');
       row.className = 'Synopsis-media-row';
       const firstNode = group[0];
       firstNode.parentNode!.insertBefore(row, firstNode);
