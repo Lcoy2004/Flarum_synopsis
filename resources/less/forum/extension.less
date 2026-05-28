@@ -17,6 +17,20 @@
   }
 }
 
+// Emoji reset mixin — ensures emoji images stay inline and small,
+// overriding any media styles that might be applied.
+.emoji-reset-styles() {
+  height: 1.5em !important;
+  width: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  display: inline !important;
+  margin: 0 0.1em !important;
+  vertical-align: -0.3em !important;
+  object-fit: unset !important;
+  border-radius: 0 !important;
+}
+
 // Apply shared styles to each specific selector
 .DiscussionListItem-info {
 
@@ -41,6 +55,17 @@
       max-width: var(--synopsis-video-max-width, 320px);
     }
 
+    // Reset emoji images to inline display — must come AFTER media rules
+    // so that !important overrides take effect. Both Twemoji (img.emoji)
+    // and Flamoji (.flamoji img) custom emojis are handled here.
+    img.emoji {
+      .emoji-reset-styles();
+    }
+
+    .flamoji img {
+      .emoji-reset-styles();
+    }
+
     .Synopsis-media-row {
       display: flex;
       flex-wrap: wrap;
@@ -58,6 +83,14 @@
         margin: 0;
         max-height: var(--synopsis-media-max-height, 200px);
         display: block;
+      }
+
+      img.emoji {
+        .emoji-reset-styles();
+      }
+
+      .flamoji img {
+        .emoji-reset-styles();
       }
 
       br {
