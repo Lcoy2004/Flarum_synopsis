@@ -1,7 +1,5 @@
-import Tag from 'ext:flarum/tags/common/models/Tag';
 import ItemList from 'flarum/common/utils/ItemList';
 import type Mithril from 'mithril';
-import EditTagModal from 'ext:flarum/tags/admin/components/EditTagModal';
 import Stream from 'flarum/common/utils/Stream';
 
 declare module 'ext:flarum/tags/common/models/Tag' {
@@ -10,6 +8,7 @@ declare module 'ext:flarum/tags/common/models/Tag' {
     excerptLength(): number;
     excerptMediaMaxHeight(): number;
     excerptVideoMaxWidth(): number;
+    excerptMediaCount(): number;
   }
 }
 
@@ -29,9 +28,8 @@ declare module 'ext:flarum/tags/admin/components/EditTagModal' {
     excerptLength: Stream<number>;
     excerptMediaMaxHeight: Stream<number>;
     excerptVideoMaxWidth: Stream<number>;
+    excerptMediaCount: Stream<number>;
     submitData(): {
-      excerptLength: any;
-      richExcerpts: any;
       name: string;
       slug: string;
       description: string;
@@ -43,6 +41,7 @@ declare module 'ext:flarum/tags/admin/components/EditTagModal' {
       excerptLength: number;
       excerptMediaMaxHeight: number;
       excerptVideoMaxWidth: number;
+      excerptMediaCount: number;
     };
   }
 }

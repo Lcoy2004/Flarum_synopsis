@@ -16,6 +16,9 @@ lcoy-synopsis:
       excerpt-video-max-width:
         label: 视频最大宽度（像素）
         help: 摘要中视频的最大宽度。设置为 0 可隐藏视频
+      excerpt-media-count:
+        label: 媒体显示数量
+        help: "限制摘要中显示的媒体（图片/视频）数量。范围：1-5"
       first-label: 首帖
       last-label: 末帖
       tags-enabled: 您已启用 <code>flarum/tags</code>。这些设置将成为默认值，除非各个标签有自己的设置

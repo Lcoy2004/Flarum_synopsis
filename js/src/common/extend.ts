@@ -6,5 +6,6 @@ export default [
     .attribute<boolean>('richExcerpts')
     .attribute<number>('excerptLength')
     .attribute<number>('excerptMediaMaxHeight')
-    .attribute<number>('excerptVideoMaxWidth'),
+    .attribute<number>('excerptVideoMaxWidth')
+    .attribute<number>('excerptMediaCount'),
 ];

@@ -47,6 +47,14 @@ class AddTagResourceFields
                 ->set(function (Tag $tag, ?string $value) {
                     $tag->excerpt_video_max_width = $value === null ? null : (int) $value;
                 }),
+
+            Schema\Integer::make('excerptMediaCount')
+                ->description('Maximum number of media elements to display in excerpts for this tag.')
+                ->nullable()
+                ->writable()
+                ->set(function (Tag $tag, ?string $value) {
+                    $tag->excerpt_media_count = $value === null ? null : (int) $value;
+                }),
         ];
     }
 }

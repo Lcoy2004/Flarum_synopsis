@@ -9,6 +9,7 @@ export default function () {
     this.excerptLength = new Stream(this.tag.excerptLength());
     this.excerptMediaMaxHeight = new Stream(this.tag.excerptMediaMaxHeight());
     this.excerptVideoMaxWidth = new Stream(this.tag.excerptVideoMaxWidth());
+    this.excerptMediaCount = new Stream(this.tag.excerptMediaCount());
   });
 
   extend(EditTagModal.prototype, 'submitData', function (data) {
@@ -16,6 +17,7 @@ export default function () {
     data.excerptLength = this.excerptLength();
     data.excerptMediaMaxHeight = this.excerptMediaMaxHeight();
     data.excerptVideoMaxWidth = this.excerptVideoMaxWidth();
+    data.excerptMediaCount = this.excerptMediaCount();
 
     return data;
   });
@@ -24,9 +26,9 @@ export default function () {
     items.add(
       'synopsis-excerpt-length',
       <div className="Form-group">
-        <label>{app.translator.trans('fof-synopsis.admin.settings.excerpt-length.label')}</label>
+        <label>{app.translator.trans('lcoy-synopsis.admin.settings.excerpt-length.label')}</label>
         <input className="FormControl" type="number" min="0" bidi={this.excerptLength} />
-        <div>{app.translator.trans('fof-synopsis.admin.settings.excerpt-length.help')}</div>
+        <div>{app.translator.trans('lcoy-synopsis.admin.settings.excerpt-length.help')}</div>
       </div>,
       5
     );
@@ -37,10 +39,10 @@ export default function () {
         <div>
           <label className="checkbox">
             <input type="checkbox" bidi={this.richExcerpts} />
-            {app.translator.trans('fof-synopsis.admin.settings.rich-excerpts.label')}
+            {app.translator.trans('lcoy-synopsis.admin.settings.rich-excerpts.label')}
           </label>
         </div>
-        <div>{app.translator.trans('fof-synopsis.admin.settings.rich-excerpts.help')}</div>
+        <div>{app.translator.trans('lcoy-synopsis.admin.settings.rich-excerpts.help')}</div>
       </div>,
       5
     );
@@ -48,9 +50,9 @@ export default function () {
     items.add(
       'synopsis-excerpt-media-max-height',
       <div className="Form-group">
-        <label>{app.translator.trans('fof-synopsis.admin.settings.excerpt-media-max-height.label')}</label>
+        <label>{app.translator.trans('lcoy-synopsis.admin.settings.excerpt-media-max-height.label')}</label>
         <input className="FormControl" type="number" min="0" bidi={this.excerptMediaMaxHeight} />
-        <div>{app.translator.trans('fof-synopsis.admin.settings.excerpt-media-max-height.help')}</div>
+        <div>{app.translator.trans('lcoy-synopsis.admin.settings.excerpt-media-max-height.help')}</div>
       </div>,
       5
     );
@@ -58,9 +60,19 @@ export default function () {
     items.add(
       'synopsis-excerpt-video-max-width',
       <div className="Form-group">
-        <label>{app.translator.trans('fof-synopsis.admin.settings.excerpt-video-max-width.label')}</label>
+        <label>{app.translator.trans('lcoy-synopsis.admin.settings.excerpt-video-max-width.label')}</label>
         <input className="FormControl" type="number" min="0" bidi={this.excerptVideoMaxWidth} />
-        <div>{app.translator.trans('fof-synopsis.admin.settings.excerpt-video-max-width.help')}</div>
+        <div>{app.translator.trans('lcoy-synopsis.admin.settings.excerpt-video-max-width.help')}</div>
+      </div>,
+      5
+    );
+
+    items.add(
+      'synopsis-excerpt-media-count',
+      <div className="Form-group">
+        <label>{app.translator.trans('lcoy-synopsis.admin.settings.excerpt-media-count.label')}</label>
+        <input className="FormControl" type="number" min="1" max="5" bidi={this.excerptMediaCount} />
+        <div>{app.translator.trans('lcoy-synopsis.admin.settings.excerpt-media-count.help')}</div>
       </div>,
       5
     );

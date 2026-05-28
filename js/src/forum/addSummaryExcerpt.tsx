@@ -37,10 +37,11 @@ export default function addSummaryExcerpt() {
     const excerptPost = app.forum.attribute<string>('synopsis.excerpt_type') === 'first' ? discussion.firstPost() : discussion.lastPost();
     const excerptLength = typeof tag?.excerptLength() === 'number' ? tag?.excerptLength() : app.forum.attribute<number>('synopsis.excerpt_length');
     const richExcerpt = typeof tag?.richExcerpts() === 'boolean' ? tag?.richExcerpts() : app.forum.attribute<boolean>('synopsis.rich_excerpts');
-    const onMobile = app.session.user ? app.session.user.preferences()?.showSynopsisExcerptsOnMobile : false;
+    const onMobile = app.session.user?.preferences()?.showSynopsisExcerptsOnMobile ?? false;
 
     const mediaMaxHeight = typeof tag?.excerptMediaMaxHeight() === 'number' ? tag?.excerptMediaMaxHeight() : app.forum.attribute<number>('synopsis.excerpt_media_max_height');
     const videoMaxWidth = typeof tag?.excerptVideoMaxWidth() === 'number' ? tag?.excerptVideoMaxWidth() : app.forum.attribute<number>('synopsis.excerpt_video_max_width');
+    const mediaCount = typeof tag?.excerptMediaCount() === 'number' ? tag?.excerptMediaCount() : app.forum.attribute<number>('synopsis.excerpt_media_count');
 
     // A length of zero means we don't want a synopsis for this discussion, so do nothing.
     if (excerptLength === 0) {
@@ -48,7 +49,7 @@ export default function addSummaryExcerpt() {
     }
 
     if (excerptPost) {
-      const excerpt = <Excerpt post={excerptPost} length={excerptLength} richExcerpt={richExcerpt} mediaMaxHeight={mediaMaxHeight} videoMaxWidth={videoMaxWidth} />;
+      const excerpt = <Excerpt post={excerptPost} length={excerptLength} richExcerpt={richExcerpt} mediaMaxHeight={mediaMaxHeight} videoMaxWidth={videoMaxWidth} mediaCount={mediaCount} />;
 
       items.add('excerpt', excerpt, -100);
       onMobile && items.add('excerptM', excerpt, -100);

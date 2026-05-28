@@ -31,7 +31,8 @@ return [
         ->cast('excerpt_length', 'int')
         ->cast('rich_excerpts', 'bool')
         ->cast('excerpt_media_max_height', 'int')
-        ->cast('excerpt_video_max_width', 'int'),
+        ->cast('excerpt_video_max_width', 'int')
+        ->cast('excerpt_media_count', 'int'),
 
     (new Extend\Settings())
         ->default('lcoy-synopsis.excerpt_length', 200)
@@ -39,11 +40,13 @@ return [
         ->default('lcoy-synopsis.excerpt-type', 'first')
         ->default('lcoy-synopsis.excerpt_media_max_height', 200)
         ->default('lcoy-synopsis.excerpt_video_max_width', 320)
+        ->default('lcoy-synopsis.excerpt_media_count', 1)
         ->serializeToForum('synopsis.excerpt_length', 'lcoy-synopsis.excerpt_length', 'intVal')
         ->serializeToForum('synopsis.rich_excerpts', 'lcoy-synopsis.rich-excerpts', 'boolVal')
         ->serializeToForum('synopsis.excerpt_type', 'lcoy-synopsis.excerpt-type')
         ->serializeToForum('synopsis.excerpt_media_max_height', 'lcoy-synopsis.excerpt_media_max_height', 'intVal')
-        ->serializeToForum('synopsis.excerpt_video_max_width', 'lcoy-synopsis.excerpt_video_max_width', 'intVal'),
+        ->serializeToForum('synopsis.excerpt_video_max_width', 'lcoy-synopsis.excerpt_video_max_width', 'intVal')
+        ->serializeToForum('synopsis.excerpt_media_count', 'lcoy-synopsis.excerpt_media_count', 'intVal'),
 
     (new Extend\User())
         ->registerPreference('showSynopsisExcerpts', 'boolVal', true)

@@ -45,6 +45,12 @@ app.initializers.add('lcoy-synopsis', () => {
       help: app.translator.trans('lcoy-synopsis.admin.settings.excerpt-video-max-width.help'),
       setting: 'lcoy-synopsis.excerpt_video_max_width',
       type: 'number',
+    })
+    .registerSetting({
+      label: app.translator.trans('lcoy-synopsis.admin.settings.excerpt-media-count.label'),
+      help: app.translator.trans('lcoy-synopsis.admin.settings.excerpt-media-count.help'),
+      setting: 'lcoy-synopsis.excerpt_media_count',
+      type: 'number',
     });
 
   extendEditTagModal();

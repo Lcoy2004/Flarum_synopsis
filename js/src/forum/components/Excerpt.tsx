@@ -10,6 +10,7 @@ export interface ExcerptAttrs extends ComponentAttrs {
   richExcerpt: boolean;
   mediaMaxHeight?: number;
   videoMaxWidth?: number;
+  mediaCount?: number;
 }
 
 export default class Excerpt extends Component<ExcerptAttrs> {
@@ -18,6 +19,7 @@ export default class Excerpt extends Component<ExcerptAttrs> {
   richExcerpt!: boolean;
   mediaMaxHeight!: number;
   videoMaxWidth!: number;
+  mediaCount!: number;
 
   oninit(vnode: Mithril.Vnode<ExcerptAttrs, this>) {
     super.oninit(vnode);
@@ -27,6 +29,7 @@ export default class Excerpt extends Component<ExcerptAttrs> {
     this.richExcerpt = this.attrs.richExcerpt;
     this.mediaMaxHeight = this.attrs.mediaMaxHeight ?? 200;
     this.videoMaxWidth = this.attrs.videoMaxWidth ?? 320;
+    this.mediaCount = this.attrs.mediaCount ?? 1;
   }
 
   view() {
@@ -42,17 +45,9 @@ export default class Excerpt extends Component<ExcerptAttrs> {
 
   getContent(): Mithril.Vnode | string {
     if (this.richExcerpt) {
-      return m.trust(truncateHtml(this.contentRich() ?? '', this.length, this.mediaMaxHeight));
+      return m.trust(truncateHtml(this.post.contentHtml() ?? '', this.length, this.mediaMaxHeight, this.mediaCount));
     }
 
-    return truncate(this.contentPlain() ?? '', this.length);
-  }
-
-  contentRich() {
-    return this.post.contentHtml();
-  }
-
-  contentPlain() {
-    return this.post.contentPlain();
+    return truncate(this.post.contentPlain() ?? '', this.length);
   }
 }

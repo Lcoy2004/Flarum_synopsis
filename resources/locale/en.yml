@@ -16,6 +16,9 @@ lcoy-synopsis:
       excerpt-video-max-width:
         label: Video max width in pixels
         help: Maximum width of videos in the excerpt. Set to 0 to hide videos.
+      excerpt-media-count:
+        label: Maximum number of media to display
+        help: "Limit the number of media items (images/videos) shown in the excerpt. Range: 1-5."
       first-label: First post
       last-label: Last post
       tags-enabled: You have <code>flarum/tags</code> enabled. These settings will become default, unless per individual tags have their own setting.
