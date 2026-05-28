@@ -8,6 +8,16 @@
  * @param mediaCount - maximum number of media elements to keep (default: 1)
  */
 const MAX_MEDIA_COUNT = 10;
+const MEDIA_SELECTOR = 'img:not(.emoji), video, iframe';
+
+function isEmoji(el: Element): boolean {
+  return el.tagName === 'IMG' && el.classList.contains('emoji');
+}
+
+function isMediaElement(el: Element): boolean {
+  const tag = el.tagName;
+  return (tag === 'IMG' && !isEmoji(el)) || tag === 'VIDEO' || tag === 'IFRAME';
+}
 
 export default function (html: string, length: number, mediaMaxHeight?: number, mediaCount: number = 1): string {
   const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -16,10 +26,10 @@ export default function (html: string, length: number, mediaMaxHeight?: number, 
   const safeMediaCount = Math.min(Math.max(0, mediaCount), MAX_MEDIA_COUNT);
 
   if (mediaMaxHeight === 0 || safeMediaCount === 0) {
-    const allMedia = body.querySelectorAll('img, video, iframe');
+    const allMedia = body.querySelectorAll(MEDIA_SELECTOR);
     allMedia.forEach((el) => el.remove());
   } else {
-    const mediaElements = body.querySelectorAll('img, video, iframe');
+    const mediaElements = body.querySelectorAll(MEDIA_SELECTOR);
     for (let i = safeMediaCount; i < mediaElements.length; i++) {
       mediaElements[i].remove();
     }
@@ -34,8 +44,8 @@ export default function (html: string, length: number, mediaMaxHeight?: number, 
     }
 
     if (node.nodeType === Node.ELEMENT_NODE) {
-      const tagName = (node as Element).tagName.toLowerCase();
-      if (tagName === 'img' || tagName === 'video' || tagName === 'iframe') {
+      const el = node as Element;
+      if (isMediaElement(el)) {
         return;
       }
     }
@@ -135,20 +145,20 @@ function isMediaOnlyNode(node: Node, cache?: WeakMap<Element, boolean>): boolean
 
   if (cache?.has(el)) return cache.get(el)!;
 
-  const hasMedia = el.querySelector('img, video, iframe') !== null;
+  const hasMedia = el.querySelector(MEDIA_SELECTOR) !== null;
   if (!hasMedia) {
     cache?.set(el, false);
     return false;
   }
   const clone = el.cloneNode(true) as Element;
-  clone.querySelectorAll('img, video, iframe').forEach((m) => m.remove());
+  clone.querySelectorAll(MEDIA_SELECTOR).forEach((m) => m.remove());
   const result = (clone.textContent || '').trim().length === 0;
   cache?.set(el, result);
   return result;
 }
 
 function wrapMediaRow(root: HTMLElement, doc: Document): void {
-  const allMedia = root.querySelectorAll('img, video, iframe');
+  const allMedia = root.querySelectorAll(MEDIA_SELECTOR);
   if (allMedia.length <= 1) return;
 
   const mediaCache = new WeakMap<Element, boolean>();
@@ -193,7 +203,7 @@ function wrapMediaRow(root: HTMLElement, doc: Document): void {
       if (isMediaOnlyNode(ancestor, mediaCache)) {
         let count = countCache.get(ancestor);
         if (count === undefined) {
-          count = ancestor.querySelectorAll('img, video, iframe').length;
+          count = ancestor.querySelectorAll(MEDIA_SELECTOR).length;
           countCache.set(ancestor, count);
         }
         if (count > 1) {

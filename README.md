@@ -2,7 +2,7 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/lcoy/synopsis.svg)](https://packagist.org/packages/lcoy/synopsis)
 
-一个为 [Flarum](https://github.com/flarum/flarum) 论坛讨论列表添加摘要显示的扩展，支持媒体内容控制。
+一个为 [Flarum](https://github.com/flarum/flarum) v2 论坛讨论列表添加摘要显示的扩展，支持媒体内容控制。
 
 ## 功能特点
 
