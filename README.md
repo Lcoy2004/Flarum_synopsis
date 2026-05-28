@@ -38,7 +38,7 @@ php flarum cache:clear
 
 ## 相关链接
 
-- [Github](https://github.com/lcoy/synopsis)
+- [Github](https://github.com/Lcoy2004/Flarum_synopsis)
 - [Packagist](https://packagist.org/packages/lcoy/synopsis)
 
 ## 使用说明
