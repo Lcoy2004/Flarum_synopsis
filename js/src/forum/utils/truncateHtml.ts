@@ -171,12 +171,16 @@ function wrapMediaRow(root: HTMLElement, doc: Document): void {
   }
 
   allMedia.forEach((el) => {
-    const parent = el.parentElement;
-    if (parent && parent !== root && isMediaOnlyNode(parent)) {
-      const count = parent.querySelectorAll('img, video, iframe').length;
-      if (count > 1) {
-        parent.classList.add('Synopsis-media-row');
+    let ancestor: Element | null = el.parentElement;
+    while (ancestor && ancestor !== root) {
+      if (isMediaOnlyNode(ancestor)) {
+        const count = ancestor.querySelectorAll('img, video, iframe').length;
+        if (count > 1) {
+          ancestor.classList.add('Synopsis-media-row');
+          break;
+        }
       }
+      ancestor = ancestor.parentElement;
     }
   });
 }
