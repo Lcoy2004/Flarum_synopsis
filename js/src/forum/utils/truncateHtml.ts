@@ -83,27 +83,32 @@ export default function (html: string, length: number, mediaMaxHeight?: number, 
 }
 
 function collapseBreaks(root: HTMLElement): void {
-  const allBr = Array.from(root.querySelectorAll('br'));
-  for (const br of allBr) {
+  const allBr = root.querySelectorAll('br');
+  for (let i = 0; i < allBr.length; i++) {
+    const br = allBr[i];
     const parent = br.parentElement;
     if (!parent) continue;
 
-    const siblings = Array.from(parent.childNodes);
-    const idx = siblings.indexOf(br);
+    let prev: ChildNode | null = br.previousSibling;
+    while (prev && prev.nodeType === Node.TEXT_NODE && !prev.textContent!.trim()) {
+      prev = prev.previousSibling;
+    }
 
-    const prev: ChildNode | undefined = siblings[idx - 1];
-    const next: ChildNode | undefined = siblings[idx + 1];
+    let next: ChildNode | null = br.nextSibling;
+    while (next && next.nodeType === Node.TEXT_NODE && !next.textContent!.trim()) {
+      next = next.nextSibling;
+    }
 
-    const prevIsBreakOrNothing = !prev || (prev.nodeType === Node.ELEMENT_NODE && (prev as Element).tagName.toLowerCase() === 'br');
-    const nextIsBreakOrNothing = !next || (next.nodeType === Node.ELEMENT_NODE && (next as Element).tagName.toLowerCase() === 'br');
+    const prevIsBreakOrNothing = !prev || (prev.nodeType === Node.ELEMENT_NODE && (prev as Element).tagName === 'BR');
+    const nextIsBreakOrNothing = !next || (next.nodeType === Node.ELEMENT_NODE && (next as Element).tagName === 'BR');
 
     if (prevIsBreakOrNothing || nextIsBreakOrNothing) {
       br.remove();
       continue;
     }
 
-    const prevHasText = prev.nodeType === Node.TEXT_NODE && (prev.textContent?.trim().length ?? 0) > 0;
-    const nextHasText = next.nodeType === Node.TEXT_NODE && (next.textContent?.trim().length ?? 0) > 0;
+    const prevHasText = prev.nodeType === Node.TEXT_NODE && prev.textContent!.trim().length > 0;
+    const nextHasText = next.nodeType === Node.TEXT_NODE && next.textContent!.trim().length > 0;
 
     if (!prevHasText && !nextHasText) {
       br.remove();
@@ -114,33 +119,22 @@ function collapseBreaks(root: HTMLElement): void {
 const VOID_ELEMENTS = new Set(['br', 'hr', 'img', 'input', 'area', 'base', 'col', 'embed', 'source', 'track', 'wbr']);
 
 function removeEmptyElements(root: HTMLElement): void {
-  let removed = true;
+  const toRemove: Element[] = [];
+  const walker = root.ownerDocument!.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
+  let node: Node | null;
+  while ((node = walker.nextNode())) {
+    const el = node as Element;
+    if (el === root) continue;
+    if (VOID_ELEMENTS.has(el.tagName.toLowerCase())) continue;
+    if (el.querySelector('img, video, iframe')) continue;
+    if ((el.textContent || '').trim().length > 0) continue;
+    toRemove.push(el);
+  }
 
-  while (removed) {
-    removed = false;
-
-    const elementsToRemove: Element[] = [];
-    const walker = root.ownerDocument!.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
-
-    let node;
-    while ((node = walker.nextNode())) {
-      const el = node as Element;
-      if (el === root) continue;
-      if (VOID_ELEMENTS.has(el.tagName.toLowerCase())) continue;
-
-      const hasMedia = el.querySelector('img, video, iframe') !== null;
-      if (hasMedia) continue;
-
-      const textContent = el.textContent?.trim() || '';
-      if (textContent.length > 0) continue;
-
-      elementsToRemove.push(el);
-    }
-
-    for (const el of elementsToRemove) {
-      el.remove();
-      removed = true;
-    }
+  for (let i = toRemove.length - 1; i >= 0; i--) {
+    const el = toRemove[i];
+    if (!el.parentNode) continue;
+    el.remove();
   }
 }
 
@@ -169,8 +163,10 @@ function wrapMediaRow(root: HTMLElement, doc: Document): void {
   const mediaCache = new WeakMap<Element, boolean>();
   const countCache = new WeakMap<Element, number>();
 
-  [root as Element, ...Array.from(root.querySelectorAll('*'))].forEach((el) => {
-    if (el.childNodes.length < 2) return;
+  const candidates = root.querySelectorAll('*');
+  for (let i = 0; i < candidates.length; i++) {
+    const el = candidates[i];
+    if (el.childNodes.length < 2) continue;
 
     const children = Array.from(el.childNodes) as Node[];
     const mediaGroups: Node[][] = [];
@@ -200,7 +196,7 @@ function wrapMediaRow(root: HTMLElement, doc: Document): void {
         row.appendChild(node);
       }
     }
-  });
+  }
 
   allMedia.forEach((el) => {
     let ancestor: Element | null = el.parentElement;

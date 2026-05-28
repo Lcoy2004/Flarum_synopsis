@@ -21,6 +21,9 @@ export default class Excerpt extends Component<ExcerptAttrs> {
   videoMaxWidth!: number;
   mediaCount!: number;
 
+  private cachedHtml: string | null = null;
+  private cacheKey: string = '';
+
   oninit(vnode: Mithril.Vnode<ExcerptAttrs, this>) {
     super.oninit(vnode);
 
@@ -45,7 +48,16 @@ export default class Excerpt extends Component<ExcerptAttrs> {
 
   getContent(): Mithril.Vnode | string {
     if (this.richExcerpt) {
-      return m.trust(truncateHtml(this.post.contentHtml() ?? '', this.length, this.mediaMaxHeight, this.mediaCount));
+      const contentHtml = this.post.contentHtml() ?? '';
+      const key = `${contentHtml}|${this.length}|${this.mediaMaxHeight}|${this.mediaCount}`;
+
+      if (this.cachedHtml !== null && this.cacheKey === key) {
+        return m.trust(this.cachedHtml);
+      }
+
+      this.cachedHtml = truncateHtml(contentHtml, this.length, this.mediaMaxHeight, this.mediaCount);
+      this.cacheKey = key;
+      return m.trust(this.cachedHtml);
     }
 
     return truncate(this.post.contentPlain() ?? '', this.length);

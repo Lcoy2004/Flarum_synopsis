@@ -1,4 +1,3 @@
-// Mixin for shared item excerpt styles
 .item-excerpt-styles() {
   margin-top: 8px;
   margin-right: 20px;
@@ -17,24 +16,20 @@
   }
 }
 
-// Emoji reset mixin — ensures emoji images stay inline and small,
-// overriding any media styles that might be applied.
 .emoji-reset-styles() {
-  height: 1.5em !important;
-  width: auto !important;
-  max-width: none !important;
-  max-height: none !important;
-  display: inline !important;
-  margin: 0 0.1em !important;
-  vertical-align: -0.3em !important;
-  object-fit: unset !important;
-  border-radius: 0 !important;
+  height: 1.5em;
+  width: auto;
+  max-width: none;
+  max-height: none;
+  display: inline;
+  margin: 0 0.1em;
+  vertical-align: -0.3em;
+  object-fit: unset;
+  border-radius: 0;
 }
 
-// Apply shared styles to each specific selector
 .DiscussionListItem-info {
 
-  // Styles for synopsis excerpts
   .Synopsis-excerpt {
 
     .FoFUpload--Upl-Image-Preview,
@@ -55,9 +50,6 @@
       max-width: var(--synopsis-video-max-width, 320px);
     }
 
-    // Reset emoji images to inline display — must come AFTER media rules
-    // so that !important overrides take effect. Both Twemoji (img.emoji)
-    // and Flamoji (.flamoji img) custom emojis are handled here.
     img.emoji {
       .emoji-reset-styles();
     }
@@ -102,8 +94,7 @@
   .item-excerpt {
     .item-excerpt-styles();
 
-    // Additional styles specific to .item-excerpt
-    pointer-events: none; // Fallback for `inert` HTML attribute
+    pointer-events: none;
 
     @media @phone {
       display: none;
