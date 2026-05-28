@@ -129,31 +129,42 @@ function removeEmptyElements(root: HTMLElement): void {
   }
 }
 
-function isMediaOnlyNode(node: Node): boolean {
+function isMediaOnlyNode(node: Node, cache?: WeakMap<Element, boolean>): boolean {
   if (node.nodeType !== Node.ELEMENT_NODE) return false;
   const el = node as Element;
+
+  if (cache?.has(el)) return cache.get(el)!;
+
   const hasMedia = el.querySelector('img, video, iframe') !== null;
-  if (!hasMedia) return false;
+  if (!hasMedia) {
+    cache?.set(el, false);
+    return false;
+  }
   const clone = el.cloneNode(true) as Element;
   clone.querySelectorAll('img, video, iframe').forEach((m) => m.remove());
-  const text = (clone.textContent || '').trim();
-  return text.length === 0;
+  const result = (clone.textContent || '').trim().length === 0;
+  cache?.set(el, result);
+  return result;
 }
 
 function wrapMediaRow(root: HTMLElement, doc: Document): void {
   const allMedia = root.querySelectorAll('img, video, iframe');
   if (allMedia.length <= 1) return;
 
+  const mediaCache = new WeakMap<Element, boolean>();
+  const countCache = new WeakMap<Element, number>();
+
   [root as Element, ...Array.from(root.querySelectorAll('*'))].forEach((el) => {
+    if (el.childNodes.length < 2) return;
+
     const children = Array.from(el.childNodes) as Node[];
     const mediaGroups: Node[][] = [];
     let currentGroup: Node[] = [];
 
     for (const child of children) {
-      if (isMediaOnlyNode(child)) {
+      if (isMediaOnlyNode(child, mediaCache)) {
         currentGroup.push(child);
       } else if (child.nodeType === Node.TEXT_NODE && !(child.textContent || '').trim()) {
-        // skip whitespace-only text nodes
       } else {
         if (currentGroup.length > 1) {
           mediaGroups.push(currentGroup);
@@ -179,8 +190,12 @@ function wrapMediaRow(root: HTMLElement, doc: Document): void {
   allMedia.forEach((el) => {
     let ancestor: Element | null = el.parentElement;
     while (ancestor && ancestor !== root) {
-      if (isMediaOnlyNode(ancestor)) {
-        const count = ancestor.querySelectorAll('img, video, iframe').length;
+      if (isMediaOnlyNode(ancestor, mediaCache)) {
+        let count = countCache.get(ancestor);
+        if (count === undefined) {
+          count = ancestor.querySelectorAll('img, video, iframe').length;
+          countCache.set(ancestor, count);
+        }
         if (count > 1) {
           ancestor.classList.add('Synopsis-media-row');
           break;
