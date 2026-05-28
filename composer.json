@@ -2,7 +2,6 @@
     "name": "lcoy/synopsis",
     "description": "Show summary excerpts on discussion lists with media control.",
     "type": "flarum-extension",
-    "version": "1.3.2",
     "keywords": [
         "flarum",
         "discussion",
