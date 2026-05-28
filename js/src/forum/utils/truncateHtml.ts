@@ -144,7 +144,7 @@ function wrapMediaRow(root: HTMLElement, doc: Document): void {
   const allMedia = root.querySelectorAll('img, video, iframe');
   if (allMedia.length <= 1) return;
 
-  Array.from(root.querySelectorAll('*')).forEach((el) => {
+  [root as Element, ...Array.from(root.querySelectorAll('*'))].forEach((el) => {
     const children = Array.from(el.childNodes) as Node[];
     const mediaGroups: Node[][] = [];
     let currentGroup: Node[] = [];
@@ -152,6 +152,8 @@ function wrapMediaRow(root: HTMLElement, doc: Document): void {
     for (const child of children) {
       if (isMediaOnlyNode(child)) {
         currentGroup.push(child);
+      } else if (child.nodeType === Node.TEXT_NODE && !(child.textContent || '').trim()) {
+        // skip whitespace-only text nodes
       } else {
         if (currentGroup.length > 1) {
           mediaGroups.push(currentGroup);
