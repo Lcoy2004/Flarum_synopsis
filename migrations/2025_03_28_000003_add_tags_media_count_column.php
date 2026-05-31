@@ -21,10 +21,10 @@ return [
         }
     },
     'down' => function (Builder $schema) {
-        $schema->table('tags', function (Blueprint $table) {
-            if ($schema->hasColumn('tags', 'excerpt_media_count')) {
+        if ($schema->hasColumn('tags', 'excerpt_media_count')) {
+            $schema->table('tags', function (Blueprint $table) {
                 $table->dropColumn('excerpt_media_count');
-            }
-        });
+            });
+        }
     },
 ];

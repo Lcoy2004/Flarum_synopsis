@@ -22,6 +22,16 @@ return [
         }
     },
     'down' => function (Builder $schema) {
-        // Do nothing.
+        $db = $schema->getConnection();
+
+        foreach (['excerpt_length', 'rich-excerpts', 'excerpt-type', 'disable-when-searching'] as $setting) {
+            $db->table('settings')
+                ->where('key', "lcoy-synopsis.$setting")
+                ->update(['key' => "ianm-synopsis.$setting"]);
+        }
+
+        $db->table('settings')
+            ->where('key', 'like', 'lcoy-synopsis.%')
+            ->delete();
     },
 ];

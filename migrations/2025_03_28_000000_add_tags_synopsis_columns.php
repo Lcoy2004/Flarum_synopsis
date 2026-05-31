@@ -27,9 +27,17 @@ return [
         }
     },
     'down' => function (Builder $schema) {
-        $schema->table('tags', function (Blueprint $table) {
-            $table->dropColumn('excerpt_length');
-            $table->dropColumn('rich_excerpts');
-        });
+        $columns = [];
+        if ($schema->hasColumn('tags', 'excerpt_length')) {
+            $columns[] = 'excerpt_length';
+        }
+        if ($schema->hasColumn('tags', 'rich_excerpts')) {
+            $columns[] = 'rich_excerpts';
+        }
+        if (!empty($columns)) {
+            $schema->table('tags', function (Blueprint $table) use ($columns) {
+                $table->dropColumn($columns);
+            });
+        }
     },
 ];

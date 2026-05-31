@@ -27,13 +27,17 @@ return [
         }
     },
     'down' => function (Builder $schema) {
-        $schema->table('tags', function (Blueprint $table) {
-            if ($schema->hasColumn('tags', 'excerpt_media_max_height')) {
-                $table->dropColumn('excerpt_media_max_height');
-            }
-            if ($schema->hasColumn('tags', 'excerpt_video_max_width')) {
-                $table->dropColumn('excerpt_video_max_width');
-            }
-        });
+        $columns = [];
+        if ($schema->hasColumn('tags', 'excerpt_media_max_height')) {
+            $columns[] = 'excerpt_media_max_height';
+        }
+        if ($schema->hasColumn('tags', 'excerpt_video_max_width')) {
+            $columns[] = 'excerpt_video_max_width';
+        }
+        if (!empty($columns)) {
+            $schema->table('tags', function (Blueprint $table) use ($columns) {
+                $table->dropColumn($columns);
+            });
+        }
     },
 ];
